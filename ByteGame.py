@@ -10,6 +10,7 @@ n = 0 # nxn dimenzije table
 direction = ['GL', 'GD', 'DL', 'DD']
 resultX=0
 resultO=0
+computer = False
 
 def init():
     global matrix
@@ -45,16 +46,9 @@ def header(n):
             print(''+ str(num+1),end='     ')
     print('') 
 
-def table():
-    global n
-    global matrix
-    global resultX
-    global resultO
+def table(board):
+    global n, resultX, resultO
     header(n)
-    #matrix[2][0]=['1','2','3','4','5', '6','7','8']
-    #matrix[2][2]=['X','X','O','O','X']
-    #matrix[7][3]=['O','X','X','O','X']
-    #matrix[7][2]=['X','O','X','X','X']
     for x in range(0,n):
         if (x%2==0):
             row=9
@@ -64,21 +58,21 @@ def table():
                 else:
                     print('  ', end='') #////////////////////////
                 for y in range(0,int(n/2)):                      
-                    if (len(matrix[x][y])==0):
+                    if (len(board[x][y])==0):
                         print('. . .', end='   ') #crno
                         print('   ',end='   ') #belo
                     else:
-                        if (len(matrix[x][y])>row-3 and len(matrix[x][y])<=row):
-                            for el in range(row-3, len(matrix[x][y])):
-                                print(f'{matrix[x][y][el]}', end=' ')
-                            for el in range(len(matrix[x][y]),row):
+                        if (len(board[x][y])>row-3 and len(board[x][y])<=row):
+                            for el in range(row-3, len(board[x][y])):
+                                print(f'{board[x][y][el]}', end=' ')
+                            for el in range(len(board[x][y]),row):
                                 print('.', end=' ')
                             #print('6 . .', end='   ') #crno
                             print('',end='  ')
                             print('   ',end='   ') #belo
-                        elif (len(matrix[x][y])>row):
+                        elif (len(board[x][y])>row):
                             for el in range(row-3, row):
-                                print(f'{matrix[x][y][el]}', end=' ')
+                                print(f'{board[x][y][el]}', end=' ')
                             #print('6 . .', end='   ') #crno
                             print('',end='  ')
                             print('   ',end='   ') #belo
@@ -97,25 +91,25 @@ def table():
                 else:
                     print('   ', end='') #////////////////////////
                 for y in range(0,int(n/2)):                      
-                    if (len(matrix[x][y])==0):
+                    if (len(board[x][y])==0):
                         print('   ',end='   ')
                         print('. . .', end='   ') #crno
                         #print('   ',end='   ') #belo
                     else:
-                        if (len(matrix[x][y])>row-3 and len(matrix[x][y])<=row):
+                        if (len(board[x][y])>row-3 and len(board[x][y])<=row):
                             print('   ',end='   ')
-                            for el in range(row-3, len(matrix[x][y])):
-                                print(f'{matrix[x][y][el]}', end=' ')
-                            for el in range(len(matrix[x][y]),row):
+                            for el in range(row-3, len(board[x][y])):
+                                print(f'{board[x][y][el]}', end=' ')
+                            for el in range(len(board[x][y]),row):
                                 print('.', end=' ')
                             #print('   ',end='   ')
                             #print('. . .', end='   ') #crno
                             print('',end='  ')
                             #print('   ',end='   ') #belo
-                        elif (len(matrix[x][y])>row):
+                        elif (len(board[x][y])>row):
                             print('   ',end='   ')
                             for el in range(row-3, row):
-                                print(f'{matrix[x][y][el]}', end=' ')
+                                print(f'{board[x][y][el]}', end=' ')
                             #print('6 . .', end='   ') #crno
                             print('',end='  ')
                             #print('   ',end='   ') #belo
@@ -134,7 +128,10 @@ def table():
 def isFirstToPlay():
 
     #global firstPlayer
-    global current
+    global current, computer
+
+    print("Da li prvo igrate vi ili racunar? (0-vi, 1-racunar)")
+    computer = bool(int(sys.stdin.readline()))
 
     print("Ko igra prvi X ili O? (0-X, 1-O):")
     firstPlayer = int(sys.stdin.readline())
@@ -151,7 +148,7 @@ def checkIfFieldExists (i, j):
     row = ord(i) - 65
     column = j - 1
     if (row >= n or column >= n):
-        print ("Polje ne postoji na tabli")
+        #print ("Polje ne postoji na tabli")
         return False 
     return True
  
@@ -163,22 +160,16 @@ def checkIfFieldIsFilled(i, j):
         if(x == 'X' or x == 'O'):
             isFilled = True
     if(isFilled == False):
-        print('Polje je prazno.')
+        #print('Polje je prazno.')
         return False    
     return True
     
 def checkFigureAtIndex(i, j, index):
     row = ord(i)-65
     column = j - 1
-
-    #matrix[row][column] = ['x', 'O', 'O']
-    #print(matrix[row])
-    #print(matrix[row][column])
-    #print(len(matrix[row][column]))
-    #print(matrix[row][column][el])
     square = matrix[row][int(column/2)]
     if (len(square) <= index):
-        print("Mesto u polju koje ste zadali je prazno.")
+        #print("Mesto u polju koje ste zadali je prazno.")
         return False   
     return True
     
@@ -188,13 +179,12 @@ def checkDirection(dir):
     for d in direction:
         if (dir == d):
             correctDir = True
-            #print("Uneli ste validnu vrednost za smer.")
-    if (correctDir == False):
-        print("Uneli ste nevalidnu vrednost za smer.")
+    #if (correctDir == False):
+        #print("Uneli ste nevalidnu vrednost za smer.")
     return correctDir
 
 #funkcija koja proverava da li je polje gore levo prazno
-def checkAdjacentUpperLeftField(i, j):
+def checkAdjacentUpperLeftField(i, j, board):
     row = ord(i) - 65
     column = j - 1
  
@@ -202,16 +192,16 @@ def checkAdjacentUpperLeftField(i, j):
 
     if (row > 0 and column > 0):      
         if (row % 2 != 0):
-            goreLevo = matrix[row - 1][int(column/2)] 
+            goreLevo = board[row - 1][int(column/2)] 
         else:
-            goreLevo = matrix[row - 1][int((column - 1)/2)]  
+            goreLevo = board[row - 1][int((column - 1)/2)]  
         if len(goreLevo) != 0:     
             #print(f"Polje gore levo [{i}][{j}] nije prazno polje.")
             prazno = False 
     return prazno
 
 #funkcija koja proverava da li je polje gore desno prazno
-def checkAdjacentUpperRigtField(i, j):
+def checkAdjacentUpperRigtField(i, j, board):
     row = ord(i) - 65
     column = j - 1
  
@@ -219,16 +209,16 @@ def checkAdjacentUpperRigtField(i, j):
  
     if (row > 0 and column < n - 1):      
         if (row % 2 != 0):
-            goreDesno = matrix[row - 1][int((column + 1)/2)] 
+            goreDesno = board[row - 1][int((column + 1)/2)] 
         else:
-            goreDesno = matrix[row - 1][int(column/2)]  
+            goreDesno = board[row - 1][int(column/2)]  
         if len(goreDesno) != 0:     
             #print(f"Polje gore desno [{i}][{j}] nije prazno polje.")
             prazno = False  
     return prazno
 
 # funkcija koja proverava da li je polje dole desno prazno
-def checkAdjacentLowerRightField(i, j):
+def checkAdjacentLowerRightField(i, j, board):
     row = ord(i) - 65
     column = j - 1
  
@@ -236,16 +226,16 @@ def checkAdjacentLowerRightField(i, j):
 
     if (row < n - 1 and column < n - 1): 
         if(row % 2 != 0):
-            doleDesno = matrix[row + 1][int((column + 1)/2)]  
+            doleDesno = board[row + 1][int((column + 1)/2)]  
         else:
-            doleDesno = matrix[row + 1][int(column/2)]
+            doleDesno = board[row + 1][int(column/2)]
         if len(doleDesno) != 0:
             #print(f"Polje dole desno [{i}][{j}] nije prazno polje.")
             prazno = False  
     return prazno
 
 # funkcija koja proverava da li je polje dole levo prazno
-def checkAdjacentLowerLeftField(i, j):
+def checkAdjacentLowerLeftField(i, j, board):
     row = ord(i) - 65
     column = j - 1
  
@@ -253,9 +243,9 @@ def checkAdjacentLowerLeftField(i, j):
 
     if (row < n - 1 and column > 0): 
         if(row % 2 != 0):
-            doleLevo = matrix[row + 1][int(column/2)]  
+            doleLevo = board[row + 1][int(column/2)]  
         else:
-            doleLevo = matrix[row + 1][int((column - 1)/2)]
+            doleLevo = board[row + 1][int((column - 1)/2)]
         if len(doleLevo) != 0:
             #print(f"Polje dole levo [{i}][{j}] nije prazno polje.")
             prazno = False 
@@ -264,7 +254,7 @@ def checkAdjacentLowerLeftField(i, j):
 
 def newPostionOfFigure(i, j, dir):
     
-    global n, matrix
+    global n
     row = ord(i) - 65
     column = j - 1
     
@@ -292,79 +282,122 @@ def newPostionOfFigure(i, j, dir):
 
     return nextStep
 
-def checkAdjacentFields(i, j, dir):
+def checkAdjacentFields(i, j, dir, board):
         valid = False
-        if (dir == "GL" and (checkAdjacentUpperLeftField(i, j) == False)):
+        if (dir == "GL" and (checkAdjacentUpperLeftField(i, j, board) == False)):
             valid = True
-        if (dir == "GD" and (checkAdjacentUpperRigtField(i, j) == False)):
+        if (dir == "GD" and (checkAdjacentUpperRigtField(i, j, board) == False)):
             valid = True
-        if (dir == "DL" and (checkAdjacentLowerLeftField(i, j) == False)):
+        if (dir == "DL" and (checkAdjacentLowerLeftField(i, j, board) == False)):
             valid = True
-        if (dir == "DD" and (checkAdjacentLowerRightField(i, j) == False)):
+        if (dir == "DD" and (checkAdjacentLowerRightField(i, j, board) == False)):
             valid = True
     
-        if(checkAdjacentLowerRightField(i, j) and checkAdjacentLowerLeftField(i, j) and checkAdjacentUpperRigtField(i, j) and checkAdjacentUpperLeftField(i, j)):
+        if(checkAdjacentLowerRightField(i, j, board) and checkAdjacentLowerLeftField(i, j, board) 
+           and checkAdjacentUpperRigtField(i, j, board) and checkAdjacentUpperLeftField(i, j, board)):
             valid = True
         return valid
 
-def checkIfLeadsToClosestStack(i, j, dir):
-    global n, matrix
+def checkIfLeadsToClosestStack(i, j, dir, board):
+    global n
     row = ord(i) - 65
     column = j - 1
-    nextStep = newPostionOfFigure(i, j, dir)
-    
-
     currStep = (row, int(column/2))
+    allDistance = []
+    allDir = []
+    minDistance = float('inf')
     #print("Curent pos " + str(currStep))
     #print("Next pos " + str(nextStep))
-    
 
-    for ind1 in range(0,n):
-        for ind2 in range(0,int(n/2)):
-            if(len(matrix[ind1][ind2])!=0):
-                stack = (ind1, ind2)
-                newDistance = distance(stack, nextStep)
-                currDistance = distance(stack, currStep)
-                #print("Curr "+str(currDistance))
-                #print("New "+str(newDistance))
-                if (newDistance < currDistance):
-                    return True
+    for d in direction:
+        if(currStep[0] == 0 and (d == 'GL' or d == 'GD')):
+            continue
+        if(currStep[0] == n-1 and (d == 'DL' or d == 'DD')):
+            continue
+        if(currStep[1] == 0 and (d == 'GL' or d == 'DL')):
+            continue
+        if(currStep[1] == n-1 and (d == 'GD' or d == 'DD')):
+            continue
+        nextStep = newPostionOfFigure(i, j, d)
+        for ind1 in range(0,n):
+            for ind2 in range(0,int(n/2)):
+                if(len(board[ind1][ind2])!=0 and currStep != (ind1, ind2)):
+                    stack = (ind1, ind2)
+                    newDistance = distance(nextStep, stack)
+                    # currDistance = distance(stack, currStep)
+                    allDistance.append(newDistance)
+                    allDir.append(d)
+                    if(newDistance < minDistance):
+                        minDistance = newDistance
+                    # print(f"Curr {currDistance} {stack[0]},{stack[1]*2} {currStep[0]},{currStep[1]*2}")
+                    #print(minDistance)
+    for index, i in enumerate(allDistance):
+        if(i == minDistance and allDir[index] == dir):
+            return True
                 
     return False
 
 def distance(pos1, pos2):
     # Manhattan distance |x1-x2|+|y1-y2|
-    return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+    #return abs(pos1[0] - pos2[0]) + abs(pos1[1]*2 - pos2[1]*2)
+    #return int(math.sqrt((pos2[0] - pos1[0])**2 + (pos2[1]*2 - pos1[1]*2)**2))
+    val1 = None
+    val2 = None
+    if(pos1[0] % 2 == 0):
+        val1 = pos1[1]*2
+    else:
+        val1 = pos1[1]*2+1
+    if(pos2[0] % 2 == 0):
+        val2 = pos2[1]*2
+    else:
+        val2 = pos2[1]*2+1
+    dist = max(abs(pos1[0] - pos2[0]), abs(val1 - val2))
+    #print(f"New {dist} {pos1[0]},{val1} {pos2[0]},{val2}")
+    return dist
 
-def checkHeightOfStacks(i, j, index ,dir):
-    global n, matrix
-    row = ord(i) - 65
-    column = j - 1
+def checkHeightOfStacks(i, j, index ,dir, board):
+    global n
 
     position = newPostionOfFigure(i,j,dir)
-    nextStep = matrix[position[0]][position[1]]
+    nextStep = board[position[0]][position[1]]
     #print(nextStep)
     nextStepHeight = len(nextStep)
-    if (nextStepHeight <= index):
+    if (nextStepHeight <= index and nextStepHeight > 0):
         #print("Novi idex "+str(nextStepHeight)+" stari "+str(index))
         return False
     #print("Novi idex "+str(nextStepHeight)+" stari "+str(index))
     return True
-    
-    
-def isValid(i, j, index, dir):
 
-    global current, matrix, n
+def isGood(i, j, index, dir, board):
+    global n
+    row = ord(i)-65
+    column = j - 1
+    nextPosition = newPostionOfFigure(i,j,dir)
+    nextStep = board[nextPosition[0]][nextPosition[1]]
+    currStep = board[row][int(column/2)]
+
+    if(checkAdjacentFields(i, j, dir, board)):
+        if(checkIfLeadsToClosestStack(i, j, dir, board)):
+            if(checkHeightOfStacks(i, j, index, dir, board)):
+                #dodatak
+                if(len(currStep) - index + len(nextStep) < 9):
+                    return True
+    return False
+    
+def isValid(i, j, index, dir, board, player):
+    global n
     row = ord(i)-65
     column = j - 1
     #dodatak
+    if(index >= len(board[row][int(column/2)])):
+        return False
     if(row % 2 == 0 and column % 2 != 0):
         return False
     if(row % 2 !=0 and column % 2 == 0):
         return False
-    if(matrix[row][int(column/2)][index] != current):
+    if(board[row][int(column/2)][index] != player):
         return False
-    if(row == 0 and (dir == 'GL' or dir == 'GD')):    
+    if(row == 0 and (dir == 'GL' or dir == 'GD')):   
         return False
     if(row == n-1 and (dir == 'DL' or dir == 'DD')):
         return False
@@ -375,88 +408,74 @@ def isValid(i, j, index, dir):
 
     #proveriti da li zadato polje postoji na tabli
     if (checkIfFieldExists(i, j)):
-        #print("Extists")
         #proveriti da li postoje figure na zadatom polju
         if(checkIfFieldIsFilled(i, j)):
-            #print("Filled")
             #proveriti da li postoji figura na zadatom mestu na steku na zadatom polju  
             if(checkFigureAtIndex(i, j, index)): 
-                #print("index")
                 #proveriti da li je smer jedan od cetiri moguca
                 if(checkDirection(dir)):
-                    #print("dir")
-                    if(checkAdjacentFields(i, j, dir)):
-                        #print("Jedan")
-                        if(checkIfLeadsToClosestStack(i, j, dir)):
-                            #print("DVA")
-                            if(checkHeightOfStacks(i, j, index, dir)):
-                                #print("TRI")
-                                return True
+                    
+                    return True
     
     return False
 
-def play(i,j,index, dir):
-    global matrix
-    global current
-    row= ord(i) - 65
-    column=j-1
+def play(board, move):
+    row= ord(move[0]) - 65
+    column=move[1]-1
+    index = move[2]
+    dir = move[3]
 
+    newBoard = [row.copy() for row in board]
     
     element = list()
-    for x in range(index, len(matrix[row][int(column/2)])):
-        element.append(matrix[row][int(column/2)][x])
-    #print(element)
-    #print(matrix[row][int(column/2)])
+    for x in range(index, len(newBoard[row][int(column/2)])):
+        element.append(newBoard[row][int(column/2)][x])
     
     if(dir == 'DD'):
         for x in range(0, len(element)):
             if(column % 2 == 0):
-                matrix[row+1][int(column/2)].append(element[x])
+                newBoard[row+1][int(column/2)].append(element[x])
             else:
-                matrix[row+1][int(column/2)+1].append(element[x])
+                newBoard[row+1][int(column/2)+1].append(element[x])
     elif(dir == 'GD'):
         for x in range(0, len(element)):
             if(column % 2 == 0):
-                matrix[row-1][int(column/2)].append(element[x])
+                newBoard[row-1][int(column/2)].append(element[x])
             else:
-                matrix[row-1][int(column/2)+1].append(element[x])
+                newBoard[row-1][int(column/2)+1].append(element[x])
     elif(dir == 'GL'):
         for x in range(0, len(element)):
             if(column % 2 == 0):
-                matrix[row-1][int(column/2)-1].append(element[x])
+                newBoard[row-1][int(column/2)-1].append(element[x])
             else:
-                matrix[row-1][int(column/2)].append(element[x])
+                newBoard[row-1][int(column/2)].append(element[x])
     else:
         for x in range(0, len(element)):
             if(column % 2 == 0):
-                matrix[row+1][int(column/2)-1].append(element[x])
+                newBoard[row+1][int(column/2)-1].append(element[x])
             else:
-                matrix[row+1][int(column/2)].append(element[x])
+                newBoard[row+1][int(column/2)].append(element[x])
 
     for x in element:
-        matrix[row][int(column/2)].remove(x)
+        newBoard[row][int(column/2)].remove(x)
 
-    checkStack()
+    #checkStack(newBoard)
+    return newBoard
 
-def checkStack():
-    global matrix
+def checkStack(board, x, o):
     global n
-    global resultX
-    global resultO
-    global current
 
     for i in range(0,n):
         for j in range(0,int(n/2)):
-            if(len(matrix[i][j]) == 8):
-                if(matrix[i][j][7] == 'X'):
-                    #print("Hey X")
-                    resultX+=1
-                    matrix[i][j].clear()
+            if(len(board[i][j]) == 8):
+                if(board[i][j][7] == 'X'):
+                    x+=1
+                    board[i][j].clear()
                 else:
-                    #print("Hey O")
-                    resultO+=1
-                    #print(matrix[i][j])
-                    matrix[i][j].clear()
+                    o+=1
+                    board[i][j].clear()
+
+    return [x,o]
 
 
 def endGame():
@@ -465,7 +484,7 @@ def endGame():
     global winner
     global n
 
-    stackNum = n/8
+    stackNum = int(((n/2)*(n-2))/8)
     if(resultX>int(stackNum/2)):
         winner = 'X'
         return True 
@@ -477,160 +496,222 @@ def endGame():
 
 def start():
 
-    global current
-
-    # init()
-    # table()
-    # for i in range(0, n): 
-    #     for j in range(0, int(n/2)):
-    #         matrix[i][j] = []
-    # table()
-    # #matrix[1][0] = ['X','O','O']
-    # #matrix[4][3] = ['X','O','X','X']
-    # matrix[1][0] = ['X','O','O']
-    # matrix[2][1] = ['X','O','X','X']
-    # table()
-
-    # print(checkHeightOfStacks('C', int(3), int(4), 'GL'))
-
-    #print(checkIfLeadsToClosestStack('B', int(2), 'DL'))
-
+    global current, matrix, resultX, resultO
     isFirstToPlay()
     if (init()):
-        #matrix[5][1] = ['X','O','O','O','X','O','X','X']
-        table()
+        table(matrix)
         while(True):
 
             if(endGame()):
                 print("Kraj igre! Pobednik je: " + winner)
                 break
             
-            showAllPossibleMoves()
-            showGameStateBasedOnPossibleMove()
-            i = input("Unesite vrstu polja na kom se figura nalazi: ")
-            j = input("Unesite kolonu polja na kom se figura nalazi: ")
-            index = input("Unesite indeks figure u polju: ")
-            dir = input("Unesite smer u kom zelite da pomerite figuru: ")
+            #showAllPossibleMoves(matrix, current)
+            #showGameStateBasedOnPossibleMove(matrix, current)
             #print(f"{i}{j}{index}{dir}")
-            if(isValid(i,int(j),int(index), dir)):
-                play(i,int(j),int(index),dir)
-                table()
-                if(current == 'X'):
-                    current = 'O'
-                else:
-                    current ='X'
-                print("Na potezu je: " + current)
+            
+            if(computer):
+                board = copy.deepcopy(matrix)
+                move = minimaxBestMove(board)#...........
+                if(move == None):
+                    switchPlayer()
+                    continue
+                matrix = play(matrix, move)
+                [resultX, resultO] = checkStack(matrix, resultX, resultO)
+                table(matrix)
             else:
-                print("Niste uneli validan potez!")
+                moves = allGoodMoves(matrix, current)
+                if(moves == None):
+                    switchPlayer()
+                    continue
+                i = input("Unesite vrstu polja na kom se figura nalazi: ")
+                j = input("Unesite kolonu polja na kom se figura nalazi: ")
+                index = input("Unesite indeks figure u polju: ")
+                dir = input("Unesite smer u kom zelite da pomerite figuru: ")
+                move = [ i , int(j), int(index), dir]
+                if(isValid(i,int(j),int(index), dir, matrix, current) and isGood(i,int(j),int(index), dir, matrix)):
+                    matrix = play(matrix, move)
+                    [resultX, resultO] = checkStack(matrix, resultX, resultO)
+                    table(matrix)
+                else:
+                    print("Niste uneli validan potez!")
+                    continue
+            #print(evaluate(matrix, current))
+            switchPlayer()
+            print("Na potezu je: " + current)
     else:
         return False
+    
+def switchPlayer():
+    global current, computer
+    current = 'O' if current == 'X' else 'X'
+    computer = False if computer else True
 
-def allPossibleMoves():
-    global n, matrix, current
-    #matrix[1][0] = ['X','X','O']
+def allPossibleMoves(state, player):
+    global n
     goodMoves = []
     badMoves = []
     for i in range(0,n):
         for j in range(0,int(n/2)):
-            for index, value in enumerate(matrix[i][j]):      
-                if(value == current):
-                    #print(value)
-                    #print("Polje "+str(chr(i+65))+" "+str(j*2+2)+" "+str(isValid(chr(i+65),j*2+2,index,'GL')))
-                    #print(matrix[i][j])
-                    #print(f"Index: {index}, Value: {value}")
+            for index, value in enumerate(state[i][j]):      
+                if(value == player):
                     
                     if(i % 2 == 0):
-                        if(isValid(chr(i+65),j*2+1,index,'GL')):
-                            goodMoves.append([chr(i+65),j*2+1,index,'GL'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+1} {index} GL]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+1,index,'GL'])
+                        if(isValid(chr(i+65),j*2+1,index,'GL', state, player)):
+                            if(isGood(chr(i+65),j*2+1,index,'GL', state)):
+                                goodMoves.append([chr(i+65),j*2+1,index,'GL'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+1,index,'GL'])
                     else:
-                        if(isValid(chr(i+65),j*2+2,index,'GL')):
-                            goodMoves.append([chr(i+65),j*2+2,index,'GL'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+2} {index} GL]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+2,index,'GL'])
+                        if(isValid(chr(i+65),j*2+2,index,'GL', state, player)):
+                            if(isGood(chr(i+65),j*2+2,index,'GL', state)):
+                                goodMoves.append([chr(i+65),j*2+2,index,'GL'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+2,index,'GL'])
                     #######################################################
                     if(i % 2 == 0):
-                        if(isValid(chr(i+65),j*2+1,index,'GD')):
-                            goodMoves.append([chr(i+65),j*2+1,index,'GD'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+1} {index} GD]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+1,index,'GD'])
+                        if(isValid(chr(i+65),j*2+1,index,'GD', state, player)):
+                            if(isGood(chr(i+65),j*2+1,index,'GD', state)):
+                                goodMoves.append([chr(i+65),j*2+1,index,'GD'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+1,index,'GD'])
                     else:
-                        if(isValid(chr(i+65),j*2+2,index,'GD')):
-                            goodMoves.append([chr(i+65),j*2+2,index,'GD'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+2} {index} GD]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+2,index,'GD'])
+                        if(isValid(chr(i+65),j*2+2,index,'GD', state, player)):
+                            if(isGood(chr(i+65),j*2+2,index,'GD', state)):
+                                goodMoves.append([chr(i+65),j*2+2,index,'GD'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+2,index,'GD'])
                     ####################################################
                     if(i % 2 == 0):
-                        if(isValid(chr(i+65),j*2+1,index,'DD')):
-                            goodMoves.append([chr(i+65),j*2+1,index,'DD'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+1} {index} DD]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+1,index,'DD'])
+                        if(isValid(chr(i+65),j*2+1,index,'DD', state, player)):
+                            if(isGood(chr(i+65),j*2+1,index,'DD', state)):
+                                goodMoves.append([chr(i+65),j*2+1,index,'DD'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+1,index,'DD'])
                     else:
-                        if(isValid(chr(i+65),j*2+2,index,'DD')):
-                            goodMoves.append([chr(i+65),j*2+2,index,'DD'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+2} {index} DD]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+2,index,'DD'])
+                        if(isValid(chr(i+65),j*2+2,index,'DD', state, player)):
+                            if(isGood(chr(i+65),j*2+2,index,'DD', state)):
+                                goodMoves.append([chr(i+65),j*2+2,index,'DD'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+2,index,'DD'])
                     #####################################################
                     if(i % 2 == 0):
-                        if(isValid(chr(i+65),j*2+1,index,'DL')):
-                            goodMoves.append([chr(i+65),j*2+1,index,'DL'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+1} {index} DL]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+1,index,'DL'])
+                        if(isValid(chr(i+65),j*2+1,index,'DL', state, player)):
+                            if(isGood(chr(i+65),j*2+1,index,'DL', state)):
+                                goodMoves.append([chr(i+65),j*2+1,index,'DL'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+1,index,'DL'])
                     else:
-                        if(isValid(chr(i+65),j*2+2,index,'DL')):
-                            goodMoves.append([chr(i+65),j*2+2,index,'DL'])
-                            #print(f"{x}.  [{chr(i+65)} {j*2+2} {index} DL]")
-                        else:
-                            badMoves.append([chr(i+65),j*2+2,index,'DL'])
+                        if(isValid(chr(i+65),j*2+2,index,'DL', state, player)):
+                            if(isGood(chr(i+65),j*2+2,index,'DL', state)):
+                                goodMoves.append([chr(i+65),j*2+2,index,'DL'])
+                            else:
+                                badMoves.append([chr(i+65),j*2+2,index,'DL'])
 
     return (badMoves, goodMoves)
 
-def showAllPossibleMoves():
-    moves = allPossibleMoves()
+def allBadMoves(state, player):
+    badMoves = allPossibleMoves(state, player)[0]
+    return badMoves
+
+def allGoodMoves(state, player):
+    goodMoves = allPossibleMoves(state, player)[1]
+    return goodMoves
+
+def showAllPossibleMoves(state, player):
+    badMoves = allBadMoves(state, player)
+    goodMoves = allGoodMoves(state, player)
     print(f"Losi potezi {current}:")
-    for index, value in enumerate(moves[0]):
+    for index, value in enumerate(badMoves):
         print(f"{index+1}.  [{value[0]}  {value[1]}  {value[2]}  {value[3]}]")
     print(f"Dobri potezi {current}:")
-    for index, value in enumerate(moves[1]):
+    for index, value in enumerate(goodMoves):
         print(f"{index+1}.  [{value[0]}  {value[1]}  {value[2]}  {value[3]}]")
-    
+          
                             
-def showGameStateBasedOnPossibleMove():
-    goodMoves = allPossibleMoves()[1]
-    global matrix, n
-    previousState = copy.deepcopy(matrix)
-    #print(previousState)
+def showGameStateBasedOnPossibleMove(state, player):
+    goodMoves = allGoodMoves(state, player)
+    previousState = copy.deepcopy(state)
     for value in goodMoves:
-        play(value[0],value[1],value[2],value[3])
-        table()
-        for i in range(0,n):
-            for j in range(0,int(n/2)):
-                matrix[i][j] = previousState[i][j]
-        previousState = copy.deepcopy(matrix)
-        #table()
-    #############################
-    # play('C', 1, 0, "DD")
-    # print(previousState)
-    # table()
-    # for i in range(0,n):
-    #     for j in range(0,int(n/2)):
-    #         matrix[i][j] = previousState[i][j]
-    # table()
-    # previousState = copy.deepcopy(matrix)
-    # play('C', 1, 0, "GD")
-    # print(previousState)
-    # table()
-    # for i in range(0,n):
-    #     for j in range(0,int(n/2)):
-    #         matrix[i][j] = previousState[i][j]
-    # table()
+        newState = play(state, value)
+        table(newState)
+        state = copy.deepcopy(previousState)
+
+def minimaxBestMove(board):
+    newBoard = copy.deepcopy(board)
+    global current, computer
+    bestScore = float('-inf')
+    bestMove = None
+    alpha = float('-inf')
+    beta = float('inf')
+    possibleMoves = allGoodMoves(board, current)  
+    for index, move in enumerate(possibleMoves):
+        resultState = play(newBoard, move)
+        newBoard = copy.deepcopy(board)
+        moveScore = minimax(resultState, 1, not computer, alpha, beta)
+        if moveScore > bestScore:
+            bestScore = moveScore
+            bestMove = move
+        alpha = max(alpha, moveScore)
+        #print(f"best sc Beta {beta} and alpha {alpha} and Bestscore {bestScore}")
+        #if(index == 1): break
+    return bestMove
+        
+
+def minimax(state, depth, maxPlayer, alpha, beta):
+    #print("minimax")
+    if depth == 0 or endGame():
+        val = evaluate(state)
+        #print(f"Eval {val}")
+        return val
+    
+    if maxPlayer:
+        #print("maxPlayer minimax")
+        return maxValue(state, depth, alpha, beta)
+    else:
+        #print("minPlayer minimax")
+        return minValue(state, depth,  alpha, beta)
+
+    
+def maxValue(state, depth, alpha, beta):
+    newState = copy.deepcopy(state)
+    possibleMoves = allGoodMoves(state, current)
+    maxValue = float('-inf')
+    for move in possibleMoves:
+        resultState = play(newState, move)
+        newState = copy.deepcopy(state)
+        score = minimax(resultState, depth-1, False, alpha, beta)
+        maxValue = max(maxValue, score)
+        alpha = max(alpha, score)
+        #print(f"max val Beta {beta} and alpha {alpha} and score {score}")
+        if beta <= alpha:
+            break
+    return maxValue
+
+
+def minValue(state, depth, alpha, beta):
+    newState = copy.deepcopy(state)
+    possibleMoves = allGoodMoves(state, 'X' if current == 'O' else 'O')
+    minValue = float('inf')
+    for move in possibleMoves:
+        resultState = play(newState, move)
+        newState = copy.deepcopy(state)
+        score = minimax(resultState, depth-1, True, alpha, beta)
+        minValue = min(minValue, score)
+        #print(f"min val Beta {beta} and alpha {alpha} and score {score}")
+        beta = min(beta, score)
+        if beta <= alpha:
+            break
+    return minValue
+
+
+def evaluate(board):
+    global current, n
+    x=0
+    o=0
+    [x, o] = checkStack(board, x, o)
+    #print(f"x:{x} o:{o}")
+    #print(f"{current}")
+    return x - o if current == 'X' else o - x
 
 start()
