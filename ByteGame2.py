@@ -267,7 +267,7 @@ def newPostionOfFigure(i, j, dir):
     global n, matrix
     row = ord(i) - 65
     column = j - 1
-    
+
     nextStep = ()
     if(dir == 'GL'):
         if(row % 2 != 0):
@@ -289,7 +289,6 @@ def newPostionOfFigure(i, j, dir):
             nextStep = (row+1, int(column/2))
         else:
             nextStep = (row+1, int((column-1)/2))
-
     return nextStep
 
 def checkAdjacentFields(i, j, dir):
@@ -303,38 +302,74 @@ def checkAdjacentFields(i, j, dir):
         if (dir == "DD" and (checkAdjacentLowerRightField(i, j) == False)):
             valid = True
     
-        if(checkAdjacentLowerRightField(i, j) and checkAdjacentLowerLeftField(i, j) and checkAdjacentUpperRigtField(i, j) and checkAdjacentUpperLeftField(i, j)):
+        if(checkAdjacentLowerRightField(i, j) and checkAdjacentLowerLeftField(i, j) 
+           and checkAdjacentUpperRigtField(i, j) and checkAdjacentUpperLeftField(i, j)):
             valid = True
         return valid
+
+def allFieldsEmpty(i, j):
+    valid = False
+    if(checkAdjacentLowerRightField(i, j) and checkAdjacentLowerLeftField(i, j) 
+       and checkAdjacentUpperRigtField(i, j) and checkAdjacentUpperLeftField(i, j)):
+            valid = True
+    return valid
 
 def checkIfLeadsToClosestStack(i, j, dir):
     global n, matrix
     row = ord(i) - 65
     column = j - 1
-    nextStep = newPostionOfFigure(i, j, dir)
-    
-
     currStep = (row, int(column/2))
+    allDistance = []
+    allDir = []
+    minDistance = float('inf')
     #print("Curent pos " + str(currStep))
     #print("Next pos " + str(nextStep))
-    
 
-    for ind1 in range(0,n):
-        for ind2 in range(0,int(n/2)):
-            if(len(matrix[ind1][ind2])!=0 and ind1 != currStep[0] and ind2 != currStep[1]):
-                stack = (ind1, ind2)
-                newDistance = distance(stack, nextStep)
-                currDistance = distance(stack, currStep)
-                # print(f"Curr {currDistance} {stack[0]},{stack[1]*2} {currStep[0]},{currStep[1]*2}")
-                # print(f"New {newDistance} {stack[0]},{stack[1]*2} {nextStep[0]},{nextStep[1]*2}")
-                if (newDistance < currDistance):
-                    return True
+    for d in direction:
+        if(row == 0 and (d == 'GL' or d == 'GD')):
+            continue
+        if(row == n-1 and (d == 'DL' or d == 'DD')):
+            continue
+        if(column == 0 and (d == 'GL' or d == 'DL')):
+            continue
+        if(column == n-1 and (d == 'GD' or d == 'DD')):
+            continue
+        nextStep = newPostionOfFigure(i, j, d)
+        for ind1 in range(0,n):
+            for ind2 in range(0,int(n/2)):
+                if(len(matrix[ind1][ind2])!=0 and currStep != (ind1, ind2)):
+                    stack = (ind1, ind2)
+                    newDistance = distance(nextStep, stack)
+                    # currDistance = distance(stack, currStep)
+                    allDistance.append(newDistance)
+                    allDir.append(d)
+                    if(newDistance < minDistance):
+                        minDistance = newDistance
+                    # print(f"Curr {currDistance} {stack[0]},{stack[1]*2} {currStep[0]},{currStep[1]*2}")
+                    #print(minDistance)
+    for index, i in enumerate(allDistance):
+        if(i == minDistance and allDir[index] == dir):
+            return True
                 
     return False
 
 def distance(pos1, pos2):
     # Manhattan distance |x1-x2|+|y1-y2|
-    return abs(pos1[0] - pos2[0]) + abs(pos1[1]*2 - pos2[1]*2)
+    #return abs(pos1[0] - pos2[0]) + abs(pos1[1]*2 - pos2[1]*2)
+    #return int(math.sqrt((pos2[0] - pos1[0])**2 + (pos2[1]*2 - pos1[1]*2)**2))
+    val1 = None
+    val2 = None
+    if(pos1[0] % 2 == 0):
+        val1 = pos1[1]*2+1
+    else:
+        val1 = pos1[1]*2+2
+    if(pos2[0] % 2 == 0):
+        val2 = pos2[1]*2+1
+    else:
+        val2 = pos2[1]*2+2
+    dist = max(abs(pos1[0] - pos2[0]), abs(val1 - val2))
+    #print(f"New {dist} {pos1[0]},{val1} {pos2[0]},{val2}")
+    return dist
 
 def checkHeightOfStacks(i, j, index ,dir):
     global n, matrix
@@ -343,9 +378,10 @@ def checkHeightOfStacks(i, j, index ,dir):
 
     position = newPostionOfFigure(i,j,dir)
     nextStep = matrix[position[0]][position[1]]
+    currStepHeight = len(matrix[row][int(column/2)])
     #print(nextStep)
     nextStepHeight = len(nextStep)
-    if (nextStepHeight <= index):
+    if (nextStepHeight <= index and currStepHeight > 1 and index>0):
         #print("Novi idex "+str(nextStepHeight)+" stari "+str(index))
         return False
     #print("Novi idex "+str(nextStepHeight)+" stari "+str(index))
@@ -355,11 +391,16 @@ def isGood(i, j, index, dir):
     global current, matrix, n
     row = ord(i)-65
     column = j - 1
+    nextPosition = newPostionOfFigure(i,j,dir)
+    nextStep = matrix[nextPosition[0]][nextPosition[1]]
+    currStep = matrix[row][int(column/2)]
 
     if(checkAdjacentFields(i, j, dir)):
         if(checkIfLeadsToClosestStack(i, j, dir)):
             if(checkHeightOfStacks(i, j, index, dir)):
-                return True
+                #dodatak
+                if(len(currStep) - index + len(nextStep) < 9):
+                    return True
     return False
     
 def isValid(i, j, index, dir):
@@ -368,6 +409,8 @@ def isValid(i, j, index, dir):
     row = ord(i)-65
     column = j - 1
     #dodatak
+    if(index >= len(matrix[row][int(column/2)])):
+        return False
     if(row % 2 == 0 and column % 2 != 0):
         return False
     if(row % 2 !=0 and column % 2 == 0):
@@ -391,7 +434,6 @@ def isValid(i, j, index, dir):
             if(checkFigureAtIndex(i, j, index)): 
                 #proveriti da li je smer jedan od cetiri moguca
                 if(checkDirection(dir)):
-                    
                     return True
     
     return False
@@ -466,7 +508,7 @@ def endGame():
     global winner
     global n
 
-    stackNum = n/8
+    stackNum = int(((n/2)*(n-2))/8)
     if(resultX>int(stackNum/2)):
         winner = 'X'
         return True 
@@ -498,7 +540,14 @@ def start():
 
     isFirstToPlay()
     if (init()):
-        #matrix[5][1] = ['X','O','O','O','X','O','X','X']
+        # for i in range(0,n):
+        #     for j in range(0,int(n/2)):
+        #         matrix[i][j]=[]
+        # matrix[1][1] = ['X','O','X','O','X','O']
+        # matrix[2][3] = ['X','X','O','X','O']
+        # matrix[6][1] = ['X','O','X','O','X','O']
+        # table()
+        # print(isGood('B', int(4), int(0), "GD"))
         table()
         while(True):
 
@@ -506,14 +555,14 @@ def start():
                 print("Kraj igre! Pobednik je: " + winner)
                 break
             
-            showAllPossibleMoves()
-            showGameStateBasedOnPossibleMove()
+            #showAllPossibleMoves()
+            #showGameStateBasedOnPossibleMove()
             i = input("Unesite vrstu polja na kom se figura nalazi: ")
             j = input("Unesite kolonu polja na kom se figura nalazi: ")
             index = input("Unesite indeks figure u polju: ")
             dir = input("Unesite smer u kom zelite da pomerite figuru: ")
             #print(f"{i}{j}{index}{dir}")
-            if(isValid(i,int(j),int(index), dir)):
+            if(isValid(i,int(j),int(index), dir) and isGood(i,int(j),int(index), dir)):
                 play(i,int(j),int(index),dir)
                 table()
                 if(current == 'X'):

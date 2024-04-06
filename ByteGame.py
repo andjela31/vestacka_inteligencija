@@ -310,13 +310,13 @@ def checkIfLeadsToClosestStack(i, j, dir, board):
     #print("Next pos " + str(nextStep))
 
     for d in direction:
-        if(currStep[0] == 0 and (d == 'GL' or d == 'GD')):
+        if(row == 0 and (d == 'GL' or d == 'GD')):
             continue
-        if(currStep[0] == n-1 and (d == 'DL' or d == 'DD')):
+        if(row == n-1 and (d == 'DL' or d == 'DD')):
             continue
-        if(currStep[1] == 0 and (d == 'GL' or d == 'DL')):
+        if(column == 0 and (d == 'GL' or d == 'DL')):
             continue
-        if(currStep[1] == n-1 and (d == 'GD' or d == 'DD')):
+        if(column == n-1 and (d == 'GD' or d == 'DD')):
             continue
         nextStep = newPostionOfFigure(i, j, d)
         for ind1 in range(0,n):
@@ -357,12 +357,15 @@ def distance(pos1, pos2):
 
 def checkHeightOfStacks(i, j, index ,dir, board):
     global n
+    row = ord(i) - 65
+    column = j - 1
 
     position = newPostionOfFigure(i,j,dir)
     nextStep = board[position[0]][position[1]]
     #print(nextStep)
     nextStepHeight = len(nextStep)
-    if (nextStepHeight <= index and nextStepHeight > 0):
+    currStepHeight = len(board[row][int(column/2)])
+    if (nextStepHeight <= index and currStepHeight > 1 and index>0):
         #print("Novi idex "+str(nextStepHeight)+" stari "+str(index))
         return False
     #print("Novi idex "+str(nextStepHeight)+" stari "+str(index))
@@ -648,7 +651,7 @@ def minimaxBestMove(board):
     for index, move in enumerate(possibleMoves):
         resultState = play(newBoard, move)
         newBoard = copy.deepcopy(board)
-        moveScore = minimax(resultState, 1, not computer, alpha, beta)
+        moveScore = minimax(resultState, 3, not computer, alpha, beta)
         if moveScore > bestScore:
             bestScore = moveScore
             bestMove = move
