@@ -1,3 +1,2 @@
-# vestacka_inteligencija
-Byte game aplikacija radjena u Python-u.
-jesenji semestar 2023.
+# ByteGame
+ByteGame is a Python game supporting both two-player gameplay and single-player mode against an AI-controlled opponent.
