@@ -2,28 +2,20 @@
 ByteGame is a Python game supporting both two-player gameplay and single-player mode against an AI-controlled opponent.
 
 ## Features
-- Socket-based communication
-- Message encryption using the Bifid cipher
-- Implementation of the RC6 symmetric encryption algorithm
-- OFB (Output Feedback) mode for secure data transmission
-- File transfer between clients
-- Encryption of transferred files using the implemented cryptographic algorithms
-- File integrity verification using the SHA-1 hashing algorithm
+- Two-player mode (player vs player)
+- Single-player mode against a computer (AI opponent)
+- Simple heuristic-based AI 
+- Console-based (CLI) game
+- Turn-based game mechanics with clear state transitions
 
 ## Technologies Used
 - Python
 
 ## How It Works
-- Clients establish a connection through the server.
-- Messages are encrypted before transmission.
-- Encrypted data is sent through socket connections.
-- The receiving client decrypts the data.
-- For file transfers:
-  - The file is converted into a byte array.
-  - The byte array is encrypted.
-  - The encrypted data is transmitted.
-  - The receiver decrypts and reconstructs the file.
-  - SHA-1 hashes are compared to verify file integrity.
+- ByteGame is a turn-based console game where two players take turns making moves according to the game rules. The game maintains a shared state that is updated after each move.
+- In single-player mode, the human player competes against a computer-controlled opponent. The AI evaluates possible moves using a simple heuristic: it simulates available actions and avoids moves that would immediately allow the opponent to score.
+- The game continues until a win condition is reached, after which the final result is displayed in the console.
+- All interaction happens through the terminal, where players input their moves and receive game updates after each turn.
 
 ## How To Run The Application
 ### 1. Clone the repository
