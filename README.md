@@ -18,32 +18,16 @@ ByteGame is a Python game supporting both two-player gameplay and single-player 
 - All interaction happens through the terminal, where players input their moves and receive game updates after each turn.
 
 ## How To Run The Application
-### 1. Clone the repository
+### 1. Make sure you have Python installed (version 3.x recommended).
+### 2. Clone the repository:
 ```bash
 git clone <repo-url>
 cd your-project-folder
 ```
-### 2. Install server dependencies
-Go to the server directory and install required packages:
-
+### 3. Run the game:
 ```bash
-cd server
-npm install
+python ByteGame.py
 ```
-### 3. Start the server
-```bash
-npm start
-```
-The server will run on:
-```bash
-ws://localhost:3000
-```
-### 4. Run the client
-Open the client folder and start `index.html`.
-
-> **Recommended way:**  
-> Use VS Code Live Server extension  
-> Right click `index.html` → “Open with Live Server”
 
 ## Screenshots
 ### Initial State of the Application
