@@ -40,7 +40,7 @@ python ByteGame.py
 ### Initial State of the Application
 
 <p align="center">
-<img src="screenshots/img1.png" width="300px"/>
+<img src="screenshots/img1.png" width="550px"/>
 </p>
 
 ### First Moves
