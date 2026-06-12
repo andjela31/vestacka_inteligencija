@@ -46,22 +46,22 @@ python ByteGame.py
 ### First Moves
 
 <p align="center">
-<img src="screenshots/img2.png"/>
-<img src="screenshots/img3.png"/>
+<img src="screenshots/img2.png" width="520px"/>
+<img src="screenshots/img3.png" width="520px"/>
 </p>
 
 ### First Point
 
 <p align="center">
-<img src="screenshots/point_for_X_1.png"/>
-<img src="screenshots/point_for_X_2.png"/>
+<img src="screenshots/point_for_X_1.png" width="520px"/>
+<img src="screenshots/point_for_X_2.png" width="520px"/>
 </p>
 
 ### Endgame
 
 <p align="center">
-<img src="screenshots/endgame1.png"/>
-<img src="screenshots/endgame2.png"/>
+<img src="screenshots/endgame1.png" width="520px"/>
+<img src="screenshots/endgame2.png" width="520px"/>
 </p>
 
 ## Project Information
