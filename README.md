@@ -39,27 +39,27 @@ python ByteGame.py
 ## Screenshots
 ### Initial State of the Application
 
-<p align="center">
+<p>
 <img src="screenshots/img1.png" width="520px"/>
 </p>
 
 ### First Moves
 
-<p align="center">
+<p>
 <img src="screenshots/img2.png" width="520px"/>
 <img src="screenshots/img3.png" width="520px"/>
 </p>
 
 ### First Point
 
-<p align="center">
+<p>
 <img src="screenshots/point_for_X_1.png" width="520px"/>
 <img src="screenshots/point_for_X_2.png" width="520px"/>
 </p>
 
 ### Endgame
 
-<p align="center">
+<p>
 <img src="screenshots/endgame1.png" width="520px"/>
 <img src="screenshots/endgame2.png" width="520px"/>
 </p>
