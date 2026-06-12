@@ -39,10 +39,30 @@ python ByteGame.py
 ## Screenshots
 ### Initial State of the Application
 
+<p align="center">
+<img src="screenshots/img1.png"/>
+</p>
 
-### Active Chat (Messages Sent)
+### First Moves
 
+<p align="center">
+<img src="screenshots/img2.png"/>
+<img src="screenshots/img3.png"/>
+</p>
 
+### First Point
+
+<p align="center">
+<img src="screenshots/point_for_X_1.png"/>
+<img src="screenshots/point_for_X_2.png"/>
+</p>
+
+### Endgame
+
+<p align="center">
+<img src="screenshots/endgame1.png"/>
+<img src="screenshots/endgame2.png"/>
+</p>
 
 ## Project Information
 - Developed: 2023  
