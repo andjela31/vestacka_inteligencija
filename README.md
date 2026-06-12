@@ -22,7 +22,6 @@ ByteGame is a Python game supporting single-player mode against an AI-controlled
 - Pieces can only move diagonally by one field. Players can move a single piece or parts of a stack they control, following movement rules. When pieces are stacked, the top piece determines the owner of the stack.
 - The goal is to form stacks of exactly 8 pieces, which are removed from the board and counted as scored stacks. The winner is the player who collects more stacks than the opponent. The game can end early if one player gains a majority of possible stacks.
 - A player must make a valid move if one exists. If no valid moves are available, the turn is skipped.
-- The game can be played in two-player mode or against a computer (AI).
 
 ## How To Run The Application
 ### 1. Make sure you have Python installed (version 3.x recommended).
