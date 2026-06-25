@@ -17,6 +17,11 @@ ByteGame is a Python game supporting single-player mode against an AI-controlled
 - The game continues until a win condition is reached, after which the final result is displayed in the console.
 - All interaction happens through the terminal, where players input their moves and receive game updates after each turn.
 
+## Installation Requirements
+- Python 3.x (recommended 3.8+)
+- Terminal / Command Prompt (for running the game)
+- Code editor (optional, e.g. Visual Studio Code)
+
 ## Game Rules
 - Byte (Slaganje) is a turn-based strategy game played on an n × n chessboard (recommended 8×8, max 16×16). Two players (X and O) take turns moving their pieces placed on dark fields of the board.
 - Pieces can only move diagonally by one field. Players can move a single piece or parts of a stack they control, following movement rules. When pieces are stacked, the top piece determines the owner of the stack.
@@ -68,4 +73,5 @@ python ByteGame.py
 - Type: Academic Project
 
 ## Author
-- Andjela Djordjevic
+- Andjela Djordjevic  
+- Email: andjeladjo@gmail.com
